@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>3 Computed and Watcher</title>
+<script src="https://cdn.jsdelivr.net/npm/vue@3.4.27/dist/vue.global.prod.js"></script>
+<style>
+  body { font-family: sans-serif; max-width: 500px; margin: 40px auto; font-size: 18px; }
+  button { padding: 6px 12px; margin: 2px; cursor: pointer; }
+  input { padding: 6px; }
+  .card { border: 1px solid #aaa; padding: 8px; margin: 6px 0; }
+  .highlight { background: yellow; }
+  .fade-enter-active, .fade-leave-active { transition: opacity .5s; }
+  .fade-enter-from, .fade-leave-to { opacity: 0; }
+</style>
+</head>
+<body>
+<div id="app">
+  <h2>Computed and Watcher</h2>
+  <div class="card" v-for="item in cart" :key="item.name">
+    {{ item.name }} (₱{{ item.price }})
+    <button @click="item.qty > 0 && item.qty--">-</button>
+    {{ item.qty }}
+    <button @click="item.qty++">+</button>
+  </div>
+  <p><b>Total (computed): ₱{{ total }}</b></p>
+  <p>Watcher: {{ message }}</p>
+</div>
+<script>
+  const { createApp, ref, computed, watch } = Vue;
+  createApp({
+    setup() {
+      const cart = ref([
+        { name: 'Notebook', price: 50, qty: 1 },
+        { name: 'Pen', price: 15, qty: 2 }
+      ]);
+      const message = ref('Change a quantity.');
+      const total = computed(() =>
+        cart.value.reduce((sum, i) => sum + i.price * i.qty, 0)
+      );
+      watch(total, (newVal, oldVal) => {
+        message.value = 'Total changed from ' + oldVal + ' to ' + newVal;
+      });
+      return { cart, total, message };
+    }
+  }).mount('#app');
+</script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>2 Directives</title>
+<script src="https://cdn.jsdelivr.net/npm/vue@3.4.27/dist/vue.global.prod.js"></script>
+<style>
+  body { font-family: sans-serif; max-width: 500px; margin: 40px auto; font-size: 18px; }
+  button { padding: 6px 12px; margin: 2px; cursor: pointer; }
+  input { padding: 6px; }
+  .card { border: 1px solid #aaa; padding: 8px; margin: 6px 0; }
+  .highlight { background: yellow; }
+  .fade-enter-active, .fade-leave-active { transition: opacity .5s; }
+  .fade-enter-from, .fade-leave-to { opacity: 0; }
+</style>
+</head>
+<body>
+<div id="app">
+  <h2>Directives</h2>
+
+  <!-- v-model -->
+  <input v-model="name" placeholder="Type your name">
+  <p>Hello, {{ name || 'stranger' }}!</p>
+
+  <!-- v-bind -->
+  <p :class="{ highlight: isOn }">This text can be highlighted</p>
+  <button @click="isOn = !isOn">Toggle highlight</button>
+
+  <!-- v-if / v-else -->
+  <button @click="show = !show">Show / hide</button>
+  <p v-if="show">I am visible</p>
+  <p v-else>I am hidden</p>
+
+  <!-- v-for -->
+  <ul>
+    <li v-for="fruit in fruits" :key="fruit">{{ fruit }}</li>
+  </ul>
+  <input v-model="newFruit" placeholder="Add a fruit">
+  <button @click="addFruit">Add</button>
+</div>
+<script>
+  const { createApp, ref } = Vue;
+  createApp({
+    setup() {
+      const name = ref('');
+      const isOn = ref(false);
+      const show = ref(true);
+      const fruits = ref(['Mango', 'Banana', 'Pineapple']);
+      const newFruit = ref('');
+      function addFruit() {
+        if (newFruit.value.trim()) {
+          fruits.value.push(newFruit.value.trim());
+          newFruit.value = '';
+        }
+      }
+      return { name, isOn, show, fruits, newFruit, addFruit };
+    }
+  }).mount('#app');
+</script>
+</body>
+</html>
